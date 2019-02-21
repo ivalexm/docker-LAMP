@@ -39,21 +39,9 @@ sed -i 's,;extension=curl,extension=curl,g' /etc/php/php.ini
 sed -i 's,;extension=ftp,extension=ftp,g' /etc/php/php.ini
 sed -i 's,;extension=gettext,extension=gettext,g' /etc/php/php.ini
 
-# for php-ldap
-pacman -S --noprogressbar --noconfirm --needed php-ldap
-sed -i 's,;extension=ldap,extension=ldap,g' /etc/php/php.ini
-
-# for php-gd
-pacman -S --noprogressbar --noconfirm --needed php-gd
-sed -i 's,;extension=gd,extension=gd,g' /etc/php/php.ini
-
 # for php-intl
 pacman -S --noprogressbar --noconfirm --needed php-intl
 sed -i 's,;extension=intl,extension=intl,g' /etc/php/php.ini
-
-# for php-mcrypt
-pacman -S --noprogressbar --noconfirm --needed php-sodium
-sed -i 's,;extension=sodium,extension=sodium,g' /etc/php/php.ini
 
 # for PHP caching
 sed -i 's,;zend_extension=opcache,zend_extension=opcache,g' /etc/php/php.ini
@@ -73,11 +61,6 @@ sed -i '$a apc.ttl=7200' /etc/php/conf.d/apcu.ini
 pacman -S --noprogressbar --noconfirm --needed exiv2
 sed -i 's,;extension=exif,extension=exif,g' /etc/php/php.ini
 
-# for sqlite database
-pacman -S --noprogressbar --noconfirm --needed sqlite php-sqlite
-sed -i 's,;extension=sqlite3,extension=sqlite3,g' /etc/php/php.ini
-sed -i 's,;extension=pdo_sqlite,extension=pdo_sqlite,g' /etc/php/php.ini
-
 # for mariadb (mysql) database
 groupadd -g 89 mysql &>/dev/null
 useradd -u 89 -g 89 -d /var/lib/mysql -s /bin/false mysql &>/dev/null
@@ -93,47 +76,6 @@ sed -i 's,;extension=mysqli,extension=mysqli,g' /etc/php/php.ini
 #sed -i 's,mysql.trace_mode = Off,mysql.trace_mode = On,g' /etc/php/php.ini
 #sed -i 's,mysql.default_host =,mysql.default_host = localhost,g' /etc/php/php.ini
 #sed -i 's,mysql.default_user =,mysql.default_user = root,g' /etc/php/php.ini
-
-# for postgresql
-pacman -S --noprogressbar --noconfirm --needed postgresql php-pgsql
-su postgres -c "initdb --locale en_US.UTF-8 -E UTF8 -D '/var/lib/postgres/data'"
-mkdir -p /run/postgresql && chown postgres /run/postgresql
-su postgres -c 'pg_ctl -s -D /var/lib/postgres/data start -w -t 120'
-su postgres -c 'createuser root'
-su postgres -c 'psql --command="ALTER USER root WITH SUPERUSER;"'
-su postgres -c '/usr/bin/pg_ctl -s -D /var/lib/postgres/data stop -m fast'
-sed -i 's,;extension=pdo_pgsql,extension=pdo_pgsql,g' /etc/php/php.ini
-sed -i 's,;extension=pgsql,extension=pgsql,g' /etc/php/php.ini
-
-# for dav suppport
-sed -i 's,#LoadModule dav_module modules/mod_dav.so,LoadModule dav_module modules/mod_dav.so,g' /etc/httpd/conf/httpd.conf
-sed -i 's,#LoadModule dav_fs_module modules/mod_dav_fs.so,LoadModule dav_fs_module modules/mod_dav_fs.so,g' /etc/httpd/conf/httpd.conf
-sed -i 's,#LoadModule dav_lock_module modules/mod_dav_lock.so,LoadModule dav_lock_module modules/mod_dav_lock.so,g' /etc/httpd/conf/httpd.conf
-sed -i 's,#LoadModule setenvif_module modules/mod_setenvif.so,LoadModule setenvif_module modules/mod_setenvif.so,g' /etc/httpd/conf/httpd.conf
-#sed -i 's,#LoadModule auth_digest_module modules/mod_auth_digest.so,LoadModule auth_digest_module modules/mod_auth_digest.so,g' /etc/httpd/conf/httpd.conf
-#sed -i 's,#LoadModule authn_core_module modules/mod_authn_core.so,LoadModule authn_core_module modules/mod_authn_core.so,g' /etc/httpd/conf/httpd.conf
-#sed -i 's,#LoadModule authn_file_module modules/mod_authn_file.so,LoadModule authn_file_module modules/mod_authn_file.so,g' /etc/httpd/conf/httpd.conf
-#sed -i 's,#LoadModule authz_core_module modules/mod_authz_core.so,LoadModule authz_core_module modules/mod_authz_core.so,g' /etc/httpd/conf/httpd.conf
-#sed -i 's,#LoadModule authz_user_module modules/mod_authz_user.so,LoadModule authz_user_module modules/mod_authz_user.so,g' /etc/httpd/conf/httpd.conf
-sed -i 's,Alias /uploads "/etc/httpd/uploads",Alias /dav "/srv/webdav",g' /etc/httpd/conf/extra/httpd-dav.conf
-sed -i 's,<Directory "/etc/httpd/uploads">,<Directory "/srv/webdav">,g' /etc/httpd/conf/extra/httpd-dav.conf
-# disable auth requirement for dav access
-sed -i 's,AuthType Digest,#AuthType Digest,g' /etc/httpd/conf/extra/httpd-dav.conf
-sed -i 's,AuthName DAV-upload,#AuthName DAV-upload,g' /etc/httpd/conf/extra/httpd-dav.conf
-sed -i 's,AuthUserFile "/etc/httpd/user.passwd",#AuthUserFile "/etc/httpd/user.passwd",g' /etc/httpd/conf/extra/httpd-dav.conf
-sed -i 's,AuthDigestProvider file,#AuthDigestProvider file,g' /etc/httpd/conf/extra/httpd-dav.conf
-sed -i 's,<RequireAny>,Require all granted,g' /etc/httpd/conf/extra/httpd-dav.conf
-sed -i 's,Require method GET POST OPTIONS,#Require method GET POST OPTIONS,g' /etc/httpd/conf/extra/httpd-dav.conf
-sed -i 's,Require user admin,Options Indexes FollowSymLinks,g' /etc/httpd/conf/extra/httpd-dav.conf
-sed -i 's,</RequireAny>,AllowOverride None,g' /etc/httpd/conf/extra/httpd-dav.conf
-mkdir -p /etc/httpd/var/
-chown -R http:http /etc/httpd/var/
-mkdir -p /srv/webdav
-chmod g+w /srv/webdav
-chown -R http:http /srv/webdav
-chmod g+s /srv/webdav/
-setfacl -d -m group:http:rwx /srv/webdav || true
-setfacl -m group:http:rwx /srv/webdav || true
 
 # setup ssl
 sed -i 's,;extension=openssl,extension=openssl,g' /etc/php/php.ini
