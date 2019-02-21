@@ -39,6 +39,9 @@ sed -i 's,;extension=curl,extension=curl,g' /etc/php/php.ini
 sed -i 's,;extension=ftp,extension=ftp,g' /etc/php/php.ini
 sed -i 's,;extension=gettext,extension=gettext,g' /etc/php/php.ini
 
+#link dependency for libphp7.so
+ln -sf /usr/lib/libreadline.so.7.0 /usr/lib/libreadline.so.8
+
 # for php-intl
 pacman -S --noprogressbar --noconfirm --needed php-intl
 sed -i 's,;extension=intl,extension=intl,g' /etc/php/php.ini
