@@ -1,5 +1,4 @@
 FROM greyltc/archlinux
-MAINTAINER Grey Christoforo <grey@christoforo.net>
 
 # update the container's mirrorlist
 RUN get-new-mirrors
