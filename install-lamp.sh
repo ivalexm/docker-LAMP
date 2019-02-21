@@ -40,7 +40,7 @@ sed -i 's,;extension=ftp,extension=ftp,g' /etc/php/php.ini
 sed -i 's,;extension=gettext,extension=gettext,g' /etc/php/php.ini
 
 #link dependency for libphp7.so
-ln -sf /usr/lib/libreadline.so.7.0 /usr/lib/libreadline.so.8
+pacman -S --noprogressbar --noconfirm --needed  readline
 
 # for php-intl
 pacman -S --noprogressbar --noconfirm --needed php-intl
