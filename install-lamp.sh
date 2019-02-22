@@ -2,6 +2,7 @@
 set -eu -o pipefail
 
 echo 'v201902221124'
+ls -l /usr/lib
 
 # install apache
 pacman -S --noprogressbar --noconfirm --needed apache
