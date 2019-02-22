@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -eu -o pipefail
 
+echo 'v201902221124'
+
 # install apache
 pacman -S --noprogressbar --noconfirm --needed apache
 sed -i "s,#ServerName www.example.com:80,ServerName $(hostname --fqdn):80,g" /etc/httpd/conf/httpd.conf
