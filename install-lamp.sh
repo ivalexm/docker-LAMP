@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -eu -o pipefail
 
-echo 'v201902221124'
-ls -l /usr/lib
-
 # install apache
 pacman -S --noprogressbar --noconfirm --needed apache
 sed -i "s,#ServerName www.example.com:80,ServerName $(hostname --fqdn):80,g" /etc/httpd/conf/httpd.conf
@@ -44,8 +41,7 @@ sed -i 's,;extension=gettext,extension=gettext,g' /etc/php/php.ini
 
 #link dependency for libphp7.so
 pacman -S --noprogressbar --noconfirm --needed  readline
-echo '================== READLINE INSTALLED ? ======================='
-ls -l /usr/lib
+ln -sf /usr/lib/libreadline.so.7 /usr/lib/libreadline.so.8
 
 # for php-intl
 pacman -S --noprogressbar --noconfirm --needed php-intl
