@@ -44,6 +44,8 @@ sed -i 's,;extension=gettext,extension=gettext,g' /etc/php/php.ini
 
 #link dependency for libphp7.so
 pacman -S --noprogressbar --noconfirm --needed  readline
+echo '================== READLINE INSTALLED ? ======================='
+ls -l /usr/lib
 
 # for php-intl
 pacman -S --noprogressbar --noconfirm --needed php-intl
