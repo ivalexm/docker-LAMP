@@ -41,7 +41,7 @@ sed -i 's,;extension=gettext,extension=gettext,g' /etc/php/php.ini
 
 #link dependency for libphp7.so
 pacman -S --noprogressbar --noconfirm --needed  readline
-ln -sf /usr/lib/libreadline.so.7 /usr/lib/libreadline.so.8
+ln -sf /usr/lib/libreadline.so.8 /usr/lib/libreadline.so.7
 
 # for php-intl
 pacman -S --noprogressbar --noconfirm --needed php-intl
