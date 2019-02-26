@@ -22,18 +22,13 @@ ENV CURLOPT_CAINFO /etc/ssl/certs/ca-certificates.crt
 #EXPOSE 80
 # for https (apache)
 EXPOSE 443
-# for postgreSQL server (only if START_POSTGRESQL = true)
-EXPOSE 5432
-# for MySQL server (mariadb, only if START_MYSQL = true)
-EXPOSE 3306
 
 # start servers
 ADD startServers.sh /usr/sbin/start-servers
-ADD setupMysqlUser.sh /usr/sbin/setup-mysql-user
 ENV START_APACHE true
 ENV APACHE_ENABLE_PORT_80 false
-ENV START_MYSQL true
+ENV START_MYSQL false
 ENV START_POSTGRESQL false
 ENV ENABLE_DAV false
 ENV ENABLE_CRON true
-CMD start-servers; setup-mysql-user; sleep infinity
+CMD start-servers; sleep infinity
